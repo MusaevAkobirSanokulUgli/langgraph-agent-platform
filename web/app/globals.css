@@ -2,66 +2,276 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start: 9, 9, 11;
-  --background-end: 9, 9, 11;
+  --void: #0C0A1D;
+  --void-900: #0F0C24;
+  --void-800: #14112E;
+  --violet-500: #8B5CF6;
+  --violet-400: #A78BFA;
+  --purple-400: #C084FC;
+  --indigo-950: #1E1B4B;
+
+  --glow-violet: rgba(139, 92, 246, 0.4);
+  --glow-purple: rgba(192, 132, 252, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start));
+  color: #E2E0FF;
+  background: var(--void);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #18181b; }
-::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #52525b; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #0C0A1D; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #8B5CF6, #C084FC);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: #A78BFA; }
 
-/* Glass effect */
+/* ─── Glass morphism ─── */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(30, 27, 75, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(167, 139, 250, 0.06);
 }
 
-/* Gradient text */
+.glass-hover {
+  transition: all 0.3s ease;
+}
+
+.glass-hover:hover {
+  background: rgba(30, 27, 75, 0.45);
+  border-color: rgba(139, 92, 246, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(167, 139, 250, 0.08);
+}
+
+/* ─── Gradient text ─── */
 .gradient-text {
-  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #a78bfa 100%);
+  background: linear-gradient(135deg, #A78BFA 0%, #C084FC 40%, #8B5CF6 80%, #A78BFA 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 4s linear infinite;
+}
+
+@keyframes shimmerText {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.gradient-text-static {
+  background: linear-gradient(135deg, #8B5CF6 0%, #C084FC 50%, #A78BFA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Flow line animation */
+/* ─── Node graph connections ─── */
 .flow-line {
-  stroke-dasharray: 8 4;
-  animation: flow-dash 1.5s linear infinite;
+  stroke-dasharray: 10 5;
+  animation: flowDash 1.8s linear infinite;
 }
 
-@keyframes flow-dash {
-  to { stroke-dashoffset: -24; }
+.flow-line-slow {
+  stroke-dasharray: 8 6;
+  animation: flowDash 3s linear infinite;
 }
 
-/* Node pulse */
+@keyframes flowDash {
+  to { stroke-dashoffset: -45; }
+}
+
+/* ─── Violet node pulse ─── */
 .node-active {
-  box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
-  animation: node-pulse 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+  animation: nodePulse 2.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 
-@keyframes node-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4); }
-  70% { box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+@keyframes nodePulse {
+  0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.3); }
+  70% { box-shadow: 0 0 0 16px rgba(139, 92, 246, 0), 0 0 30px rgba(139, 92, 246, 0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0), 0 0 20px rgba(139, 92, 246, 0.3); }
 }
 
-/* Code block */
+.node-glow {
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6)) drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
+}
+
+/* ─── Animated grid background ─── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center center;
+}
+
+/* ─── Orb decorations ─── */
+.orb-violet {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.orb-purple {
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.2) 0%, rgba(192, 132, 252, 0.04) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.orb-indigo {
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+/* ─── Code block ─── */
 .code-block {
-  background: #0d1117;
-  border: 1px solid #30363d;
-  border-radius: 8px;
-  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  background: rgba(12, 10, 29, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Fira Mono', monospace;
+  box-shadow: inset 0 1px 0 rgba(139, 92, 246, 0.08), 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Button styles ─── */
+.btn-primary {
+  background: linear-gradient(135deg, #7C3AED, #8B5CF6);
+  color: white;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(30, 27, 75, 0.5);
+  color: #A78BFA;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(30, 27, 75, 0.7);
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ─── Connection lines for workflow graph ─── */
+.connection-line {
+  stroke: rgba(139, 92, 246, 0.2);
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.connection-line-active {
+  stroke: rgba(139, 92, 246, 0.7);
+  stroke-width: 2;
+  fill: none;
+  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.5));
+}
+
+/* ─── Typing cursor ─── */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: #8B5CF6;
+  font-weight: 300;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ─── Status indicators ─── */
+.status-active {
+  background: #8B5CF6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.1); }
+}
+
+/* ─── Shimmer effect ─── */
+.shimmer-bg {
+  background: linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.08) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── Neon border ─── */
+.neon-border {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.neon-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(192, 132, 252, 0.3), rgba(139, 92, 246, 0.5));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ─── Section fade ─── */
+.section-fade {
+  position: relative;
+}
+
+.section-fade::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), rgba(192, 132, 252, 0.3), transparent);
+}
+
+/* ─── Floating animation ─── */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ─── Terminal typing ─── */
+@keyframes typeText {
+  from { width: 0; }
+  to { width: 100%; }
 }

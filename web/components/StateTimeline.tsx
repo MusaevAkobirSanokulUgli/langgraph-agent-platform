@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Database, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import { Database, Clock, CheckCircle, ChevronDown } from 'lucide-react'
 
 interface StateSnapshot {
   agent: string
   timestamp: string
   status: 'completed' | 'active' | 'pending'
   changes: Record<string, string>
-  color: string
+  accentColor: string
+  glowColor: string
 }
 
 const STATE_SNAPSHOTS: StateSnapshot[] = [
@@ -16,7 +17,8 @@ const STATE_SNAPSHOTS: StateSnapshot[] = [
     agent: 'Initial State',
     timestamp: 'T+0s',
     status: 'completed',
-    color: '#6ee7b7',
+    accentColor: '#A78BFA',
+    glowColor: 'rgba(167, 139, 250, 0.3)',
     changes: {
       objective: '"Analyze market trends in AI infrastructure"',
       status: '"running"',
@@ -28,7 +30,8 @@ const STATE_SNAPSHOTS: StateSnapshot[] = [
     agent: 'Research Agent',
     timestamp: 'T+3.2s',
     status: 'completed',
-    color: '#38bdf8',
+    accentColor: '#C084FC',
+    glowColor: 'rgba(192, 132, 252, 0.3)',
     changes: {
       research_findings: '[{confidence: 0.85, key_findings: [...]}]',
       current_agent: '"analyzer"',
@@ -40,7 +43,8 @@ const STATE_SNAPSHOTS: StateSnapshot[] = [
     agent: 'Analysis Agent',
     timestamp: 'T+6.8s',
     status: 'completed',
-    color: '#a78bfa',
+    accentColor: '#818CF8',
+    glowColor: 'rgba(129, 140, 248, 0.3)',
     changes: {
       analysis: '{insights: [...], recommendations: [...], confidence_score: 0.91}',
       current_agent: '"writer"',
@@ -51,7 +55,8 @@ const STATE_SNAPSHOTS: StateSnapshot[] = [
     agent: 'Writer Agent',
     timestamp: 'T+10.1s',
     status: 'completed',
-    color: '#34d399',
+    accentColor: '#E879F9',
+    glowColor: 'rgba(232, 121, 249, 0.3)',
     changes: {
       draft: '"# AI Infrastructure Market Analysis\\n\\n..."',
       current_agent: '"reviewer"',
@@ -61,7 +66,8 @@ const STATE_SNAPSHOTS: StateSnapshot[] = [
     agent: 'Reviewer Agent',
     timestamp: 'T+13.5s',
     status: 'active',
-    color: '#fbbf24',
+    accentColor: '#C084FC',
+    glowColor: 'rgba(192, 132, 252, 0.4)',
     changes: {
       review_feedback: '[{approved: true, quality_score: 0.87, ...}]',
       final_output: '"# AI Infrastructure Market Analysis..."',
@@ -79,36 +85,91 @@ function SnapshotRow({ snapshot, index }: SnapshotRowProps) {
   const [open, setOpen] = useState(index === 4)
 
   return (
-    <div className="border border-zinc-800/60 rounded-lg overflow-hidden">
+    <div
+      className="rounded-xl overflow-hidden transition-all duration-200"
+      style={{
+        background: open
+          ? 'rgba(20, 17, 46, 0.7)'
+          : 'rgba(15, 12, 36, 0.5)',
+        border: `1px solid ${open ? snapshot.accentColor + '30' : 'rgba(139, 92, 246, 0.1)'}`,
+      }}
+    >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-zinc-800/30 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3.5 transition-colors"
+        style={{ color: 'inherit' }}
       >
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: snapshot.color }} />
-          <span className="font-medium text-sm text-zinc-200">{snapshot.agent}</span>
-          <span className="text-xs text-zinc-600 font-mono">{snapshot.timestamp}</span>
+          {/* Status dot */}
+          {snapshot.status === 'active' ? (
+            <div
+              className="w-2.5 h-2.5 rounded-full shrink-0 status-active"
+              style={{ background: snapshot.accentColor }}
+            />
+          ) : snapshot.status === 'completed' ? (
+            <div
+              className="w-2.5 h-2.5 rounded-full shrink-0"
+              style={{
+                background: snapshot.accentColor + '80',
+                border: `1.5px solid ${snapshot.accentColor}`,
+              }}
+            />
+          ) : (
+            <div
+              className="w-2.5 h-2.5 rounded-full shrink-0"
+              style={{ background: 'rgba(139, 92, 246, 0.15)', border: '1.5px solid rgba(139, 92, 246, 0.2)' }}
+            />
+          )}
+          <span className="font-semibold text-sm" style={{ color: '#E2E0FF' }}>
+            {snapshot.agent}
+          </span>
+          <span className="text-xs font-mono" style={{ color: 'rgba(139, 92, 246, 0.5)' }}>
+            {snapshot.timestamp}
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          {snapshot.status === 'completed' && <CheckCircle className="w-3.5 h-3.5 text-green-500" />}
+          {snapshot.status === 'completed' && (
+            <CheckCircle className="w-3.5 h-3.5" style={{ color: snapshot.accentColor }} />
+          )}
           {snapshot.status === 'active' && (
-            <div className="w-3.5 h-3.5 rounded-full border-2 border-amber-400 border-t-transparent animate-spin" />
+            <div
+              className="w-3.5 h-3.5 rounded-full border-2 border-t-transparent animate-spin"
+              style={{ borderColor: snapshot.accentColor + '40', borderTopColor: snapshot.accentColor }}
+            />
           )}
-          {open ? (
-            <ChevronDown className="w-4 h-4 text-zinc-600" />
-          ) : (
-            <ChevronRight className="w-4 h-4 text-zinc-600" />
-          )}
+          <ChevronDown
+            className="w-4 h-4 transition-transform duration-200"
+            style={{
+              color: 'rgba(167, 139, 250, 0.4)',
+              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+            }}
+          />
         </div>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 border-t border-zinc-800/60">
-          <div className="mt-3 space-y-2">
+        <div
+          className="px-4 pb-4 pt-3"
+          style={{ borderTop: '1px solid rgba(139, 92, 246, 0.08)' }}
+        >
+          <div className="space-y-2">
             {Object.entries(snapshot.changes).map(([key, value]) => (
               <div key={key} className="flex items-start gap-3">
-                <span className="font-mono text-xs text-violet-400 shrink-0 mt-0.5 min-w-32">{key}</span>
-                <span className="font-mono text-xs text-zinc-400 break-all">{value}</span>
+                <span
+                  className="font-mono text-xs shrink-0 mt-0.5"
+                  style={{
+                    color: snapshot.accentColor,
+                    minWidth: '130px',
+                  }}
+                >
+                  {key}
+                </span>
+                <span
+                  className="font-mono text-xs break-all"
+                  style={{ color: 'rgba(196, 181, 253, 0.6)' }}
+                >
+                  {value}
+                </span>
               </div>
             ))}
           </div>
@@ -121,11 +182,23 @@ function SnapshotRow({ snapshot, index }: SnapshotRowProps) {
 export default function StateTimeline() {
   return (
     <div className="w-full">
-      <div className="flex items-center gap-3 mb-5">
-        <Database className="w-5 h-5 text-violet-400" />
+      <div className="flex items-center gap-3 mb-6">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{
+            background: 'rgba(139, 92, 246, 0.12)',
+            border: '1px solid rgba(139, 92, 246, 0.25)',
+          }}
+        >
+          <Database className="w-4 h-4" style={{ color: '#A78BFA' }} />
+        </div>
         <div>
-          <h3 className="text-lg font-semibold text-white">State Timeline</h3>
-          <p className="text-sm text-zinc-500">LangGraph TypedDict state mutations across agent transitions</p>
+          <h3 className="font-bold text-base" style={{ color: '#E2E0FF' }}>
+            State Timeline
+          </h3>
+          <p className="text-xs" style={{ color: 'rgba(167, 139, 250, 0.5)' }}>
+            LangGraph TypedDict mutations across agent transitions
+          </p>
         </div>
       </div>
 
@@ -134,23 +207,33 @@ export default function StateTimeline() {
           <div key={snapshot.agent} className="flex gap-3">
             {/* Timeline connector */}
             <div className="flex flex-col items-center">
-              <div
-                className="w-3 h-3 rounded-full shrink-0 mt-3.5"
-                style={{ backgroundColor: snapshot.status === 'active' ? snapshot.color : undefined }}
-                data-completed={snapshot.status === 'completed'}
-              >
-                {snapshot.status !== 'active' && (
+              <div className="w-3 h-3 mt-4 shrink-0 flex items-center justify-center">
+                {snapshot.status === 'active' ? (
                   <div
                     className="w-3 h-3 rounded-full"
                     style={{
-                      backgroundColor: snapshot.status === 'completed' ? snapshot.color + '60' : '#27272a',
-                      border: `1.5px solid ${snapshot.color}`,
+                      background: snapshot.accentColor,
+                      boxShadow: `0 0 8px ${snapshot.glowColor}`,
+                      animation: 'statusPulse 2s ease-in-out infinite',
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{
+                      background: snapshot.accentColor + '50',
+                      border: `1.5px solid ${snapshot.accentColor}`,
                     }}
                   />
                 )}
               </div>
               {i < STATE_SNAPSHOTS.length - 1 && (
-                <div className="w-px flex-1 bg-zinc-800 mt-1" />
+                <div
+                  className="w-px flex-1 mt-1"
+                  style={{
+                    background: `linear-gradient(to bottom, ${snapshot.accentColor}30, rgba(139, 92, 246, 0.08))`,
+                  }}
+                />
               )}
             </div>
 
@@ -162,10 +245,16 @@ export default function StateTimeline() {
         ))}
       </div>
 
-      <div className="mt-4 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/60">
-        <p className="text-xs text-zinc-500 flex items-start gap-2">
-          <Clock className="w-3.5 h-3.5 text-zinc-600 mt-0.5 shrink-0" />
-          State is persisted via LangGraph's MemorySaver checkpointer, enabling workflow resumption after human-in-the-loop interrupts. Each node mutation is immutable and traceable.
+      <div
+        className="mt-5 p-4 rounded-xl"
+        style={{
+          background: 'rgba(20, 17, 46, 0.5)',
+          border: '1px solid rgba(139, 92, 246, 0.1)',
+        }}
+      >
+        <p className="text-xs flex items-start gap-2" style={{ color: 'rgba(167, 139, 250, 0.5)' }}>
+          <Clock className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: 'rgba(139, 92, 246, 0.4)' }} />
+          State is persisted via LangGraph&apos;s MemorySaver checkpointer, enabling workflow resumption after human-in-the-loop interrupts. Each node mutation is immutable and fully traceable.
         </p>
       </div>
     </div>
