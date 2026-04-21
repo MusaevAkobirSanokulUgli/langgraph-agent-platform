@@ -83,8 +83,9 @@ workflow = graph.compile(
     interrupt_before=["human_review"],
 )`
 
-const API_EXAMPLE = `# Create a research workflow
-curl -X POST http://localhost:8000/api/v1/workflows/ \\
+const API_EXAMPLE = `# Replace with your deployed API URL
+# Create a research workflow
+curl -X POST https://api.example.com/api/v1/workflows/ \\
   -H "Content-Type: application/json" \\
   -d '{
     "workflow_type": "research",
@@ -94,11 +95,11 @@ curl -X POST http://localhost:8000/api/v1/workflows/ \\
   }'
 
 # Submit human feedback when workflow pauses
-curl -X POST http://localhost:8000/api/v1/workflows/{id}/feedback \\
+curl -X POST https://api.example.com/api/v1/workflows/{id}/feedback \\
   -d '{"feedback": "Focus on GPU cloud providers", "approved": false}'
 
 # Subscribe to real-time events via WebSocket
-ws://localhost:8000/api/v1/ws/workflows/{id}`
+wss://api.example.com/api/v1/ws/workflows/{id}`
 
 export default function Home() {
   return (
@@ -550,7 +551,7 @@ export default function Home() {
               REST API
             </h2>
             <p style={{ color: 'rgba(196, 181, 253, 0.6)' }}>
-              FastAPI with automatic OpenAPI docs at /docs
+              FastAPI with automatic OpenAPI documentation
             </p>
           </div>
 
@@ -683,7 +684,7 @@ export default function Home() {
               className="text-sm leading-loose"
               style={{ color: 'rgba(196, 181, 253, 0.8)', fontFamily: 'JetBrains Mono, Fira Code, monospace' }}
             >{`# Clone and configure
-git clone https://github.com/your-username/langgraph-agent-platform
+git clone https://github.com/MusaevAkobirSanokulUgli/langgraph-agent-platform
 cd langgraph-agent-platform/backend
 cp .env.example .env
 # Add your AGENT_OPENAI_API_KEY to .env
@@ -696,10 +697,7 @@ pip install -e ".[dev]"
 uvicorn app.main:app --reload
 
 # Run tests
-pytest tests/ -v
-
-# API docs
-open http://localhost:8000/docs`}</pre>
+pytest tests/ -v`}</pre>
           </div>
 
           {/* Tech stack badges */}

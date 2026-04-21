@@ -108,7 +108,7 @@ export default function Header() {
             Live Demo
           </Link>
           <a
-            href="https://github.com"
+            href="https://github.com/MusaevAkobirSanokulUgli/langgraph-agent-platform"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
