@@ -920,6 +920,28 @@ export default function DemoPage() {
     <div style={{ minHeight: '100vh', background: '#0C0A1D' }}>
       <Header />
 
+      <div className="pt-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <a href="/live" className="block p-4 rounded-2xl transition-all hover:scale-[1.01]"
+            style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.06))",
+              border: "1px solid rgba(99,102,241,0.3)" }}>
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                <div className="text-sm font-bold uppercase tracking-wider mb-1" style={{ color: "#A5B4FC" }}>
+                  🔥 Live DeepSeek-Powered Multi-Agent Workflow
+                </div>
+                <div className="text-xs" style={{ color: "#94A3B8" }}>
+                  Enter a topic, pick a workflow, watch 3-4 real AI agents collaborate in real-time.
+                </div>
+              </div>
+              <span className="text-xs font-bold px-4 py-2 rounded-xl" style={{ background: "#6366F1", color: "#F1F5F9" }}>
+                Try it →
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
